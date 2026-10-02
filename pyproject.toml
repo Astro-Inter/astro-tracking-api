@@ -1,0 +1,27 @@
+[project]
+name = "astro-tracking"
+version = "2.0.0"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi==0.142.2",
+    "asyncpg==0.31.0",
+    "pydantic-settings==2.15.0",
+]
+
+[project.optional-dependencies]
+local = ["uvicorn==0.54.0"]
+test = ["pytest==9.1.1", "httpx==0.28.1"]
+
+[dependency-groups]
+dev = ["workers-py==1.17.6", "workers-runtime-sdk==1.9.2"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app"]
+package-dir = {"" = "src"}
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

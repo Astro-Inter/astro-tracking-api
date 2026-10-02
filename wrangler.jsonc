@@ -1,0 +1,17 @@
+{
+  "name": "astro-tracking",
+  "main": "src/worker.py",
+  "compatibility_date": "2026-10-02",
+  "compatibility_flags": ["python_workers"],
+  "python_modules": { "exclude": ["**/*.pyc", "**/__pycache__/**"] },
+  "vars": {
+    "CORS_ALLOWED_ORIGINS": "http://localhost:5173,http://localhost:3000"
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "SUBSTITUA_PELO_ID_DO_HYPERDRIVE"
+    }
+  ],
+  "observability": { "enabled": true }
+}

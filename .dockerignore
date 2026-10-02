@@ -1,0 +1,17 @@
+.venv
+.venv-workers
+.env
+.env.*
+.git
+__pycache__
+.pytest_cache
+tests
+.uv-cache
+.wrangler
+.dev.vars
+.dev.vars.*
+vendor
+python_modules
+*.egg-info
+build
+dist

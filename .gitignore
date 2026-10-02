@@ -1,0 +1,33 @@
+# Credenciais locais; o exemplo de configuração deve ser versionado.
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# Ambientes, dependências e caches locais.
+.venv/
+.venv-workers/
+.uv-cache/
+node_modules/
+vendor/
+python_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Builds e arquivos gerados pelo empacotamento do Worker.
+*.egg-info/
+build/
+dist/
+.wrangler/
+.pywrangler/
+pylock.toml
+
+# Relatórios e logs locais.
+.coverage
+.coverage.*
+htmlcov/
+*.log

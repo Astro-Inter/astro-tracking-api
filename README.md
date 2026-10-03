@@ -136,12 +136,13 @@ Não é um deploy de Uvicorn no Cloudflare Pages.
    No Windows, execute o pywrangler em um clone/cópia com caminho simples, como
    `C:\dev\astro-tracking`: a versão validada falhou no caminho deste projeto por causa
    do `&` em `Instituto J&F`. O dry-run passou em uma pasta temporária sem esse caractere.
-2. No painel da Cloudflare, crie um Hyperdrive apontando para o PostgreSQL, com credenciais
-   próprias da API. O banco deve ser acessível pelo Hyperdrive; `localhost` não funciona após deploy.
-   Bancos privados exigem configurar a conectividade apropriada antes.
-3. Em `wrangler.jsonc`, substitua `SUBSTITUA_PELO_ID_DO_HYPERDRIVE` pelo ID real.
-   Troque `CORS_ALLOWED_ORIGINS` pelas origens do frontend de produção.
-   As credenciais do banco ficam no Hyperdrive, fora desse arquivo e do GTM.
+2. Este Worker reutiliza o Hyperdrive existente `astro-email-db`, conectado ao banco `astro_2`.
+   O ID do conector já está configurado em `wrangler.jsonc`; não crie outro Hyperdrive para esta API.
+   O banco deve estar acessível pelo Hyperdrive; `localhost` não funciona após deploy.
+3. `CORS_ALLOWED_ORIGINS` permanece com `http://localhost:5173` e `http://localhost:3000`
+   enquanto o frontend não tiver uma origem pública. Depois da publicação do frontend, atualize
+   a variável para a origem HTTPS real. As credenciais do banco ficam no Hyperdrive, fora deste
+   arquivo e do GTM.
 4. Autentique e publique quando essas configurações estiverem prontas:
 
 ```powershell

@@ -1,5 +1,5 @@
 {
-  "name": "astro-tracking",
+  "name": "astro-tracking-api",
   "main": "src/worker.py",
   "compatibility_date": "2026-10-02",
   "compatibility_flags": ["python_workers"],
@@ -10,7 +10,7 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "SUBSTITUA_PELO_ID_DO_HYPERDRIVE"
+      "id": "2004ed1dbe4a460495e663c42f3b801f"
     }
   ],
   "observability": { "enabled": true }

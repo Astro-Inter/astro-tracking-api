@@ -45,6 +45,7 @@ dependencies = [
     { name = "asyncpg" },
     { name = "fastapi" },
     { name = "pydantic-settings" },
+    { name = "workers-py" },
 ]
 
 [package.optional-dependencies]
@@ -68,6 +69,7 @@ requires-dist = [
     { name = "fastapi", specifier = "==0.142.2" },
     { name = "httpx", marker = "extra == 'test'", specifier = "==0.28.1" },
     { name = "pydantic-settings", specifier = "==2.15.0" },
+    { name = "workers-py", specifier = "==1.17.6" },
     { name = "pytest", marker = "extra == 'test'", specifier = "==9.1.1" },
     { name = "uvicorn", marker = "extra == 'local'", specifier = "==0.54.0" },
 ]

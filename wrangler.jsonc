@@ -5,7 +5,8 @@
   "compatibility_flags": ["python_workers"],
   "python_modules": { "exclude": ["**/*.pyc", "**/__pycache__/**"] },
   "vars": {
-    "CORS_ALLOWED_ORIGINS": "*"
+    "CORS_ALLOWED_ORIGINS": "*",
+    "GRAFANA_OTLP_ENDPOINT": "https://otlp-gateway-prod-sa-east-1.grafana.net/otlp"
   },
   "hyperdrive": [
     {

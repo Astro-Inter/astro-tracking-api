@@ -8,13 +8,13 @@ Não há consultas públicas dos eventos. O Swagger está em `/docs`.
 
 ## Banco e contrato
 
-Usa a tabela `eventos_astro` existente, com as onze colunas do DDL informado.
+Usa a tabela `eventos_astro` existente, com as doze colunas do DDL, incluindo `cliente_ip INET` opcional.
 Não cria nem altera tabelas automaticamente. O `BIGSERIAL` gera `id_evento`;
 o INSERT preenche `criado_em` com `CURRENT_TIMESTAMP AT TIME ZONE 'UTC'`,
 porque a tabela não possui DEFAULT para esse campo. A resposta representa esse horário com `Z`.
 `criado_em` é o horário de recebimento/gravação, não o instante original do clique.
 
-O JSON aceita `firebase_uid`, `tipo_evento`, `nome_botao`, `nome_tela`, `contexto_tela`,
+O JSON aceita `firebase_uid`, `cliente_ip`, `tipo_evento`, `nome_botao`, `nome_tela`, `contexto_tela`,
 `nome_dialog`, `dialog_clicado`, `showcase_click` e `nome_showcase`.
 `id_evento` e `criado_em` são controlados pela API/banco.
 
@@ -45,6 +45,7 @@ Exemplo:
 ```json
 {
   "firebase_uid": null,
+  "cliente_ip": "192.0.2.10",
   "tipo_evento": "button_click",
   "nome_tela": "login",
   "nome_botao": "entrar"
@@ -55,6 +56,32 @@ O DDL enviado não declara PRIMARY KEY/UNIQUE em `id_evento`. A API funciona sem
 mas a sequência BIGSERIAL sozinha não impede IDs duplicados inseridos manualmente.
 Uma chave primária é recomendada após conferir os dados existentes.
 A tabela também não tem chave de idempotência: enviar o mesmo evento duas vezes grava duas linhas.
+
+## IP do cliente (SCRUM-407)
+
+`cliente_ip` aceita um endereço IPv4 ou IPv6 em texto ou `null`. IP inválido,
+hostname, máscara CIDR, zona de interface ou valor não textual retorna 422 antes
+de acessar o banco. O INSERT usa parâmetro `INET` e a confirmação HTTP 201 devolve
+o IP salvo como texto JSON. A coluna deve existir no PostgreSQL antes do deploy;
+a API não aplica migrações automaticamente.
+
+No Worker, o IP fornecido pelo Cloudflare (`CF-Connecting-IPv6`, quando disponível,
+ou `CF-Connecting-IP`) tem prioridade sobre o valor enviado no JSON. O header IPv6
+preserva o endereço original quando Pseudo IPv4 está em Overwrite Headers.
+Isso funciona quando a tag GTM do navegador chama diretamente a API: o web pode
+omitir `cliente_ip` ou enviar `null`, sem consultar serviços externos de IP.
+
+Na execução local, esses headers não são considerados confiáveis; é utilizado
+o campo validado do JSON, ou `null` se ausente. O valor informado no JSON é um
+atributo de analytics, não uma identidade autenticada. Não usamos X-Forwarded-For.
+Se houver um GTM server-side/proxy intermediário, o IP observado pode ser o do
+proxy; esse fluxo precisa de uma política própria de encaminhamento confiável.
+
+O IP não é acrescentado aos logs da aplicação/Grafana. A coleta/gravação fica na
+tabela eventos_astro, consumida posteriormente pela API medalhão/Databricks.
+
+Referências: [PR do banco](https://github.com/Astro-Inter/banco-de-dados/pull/39),
+[headers Cloudflare](https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-connecting-ip).
 
 ## Executar localmente
 
@@ -98,6 +125,7 @@ window.dataLayer.push({
   event: 'button_click',
   astro_event: {
     firebase_uid: usuarioAtual ? usuarioAtual.uid : null,
+    cliente_ip: null, // O Worker preenche a partir da requisição do navegador.
     tipo_evento: 'button_click',
     nome_tela: 'login',
     nome_botao: 'entrar'

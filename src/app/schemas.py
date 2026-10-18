@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import Annotated, Literal
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, IPvAnyAddress, StringConstraints, field_validator, model_validator
 
 Nome = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=255)]
 Tipo = Literal["screen_view", "button_click", "dialog_viewed", "dialog_clicked", "showcase_viewed", "showcase_clicked", "conversation_started", "conversation_message_sent", "conversation_message_received"]
@@ -9,6 +9,7 @@ class CamposEvento(BaseModel):
     """Campos recebidos do GTM e devolvidos na confirmação de gravação."""
     model_config = ConfigDict(extra="forbid")
     firebase_uid: Nome | None = None
+    cliente_ip: IPvAnyAddress | None = None
     tipo_evento: str
     nome_tela: Nome | None = None
     contexto_tela: str | None = Field(default=None, max_length=8_000)
@@ -33,6 +34,15 @@ class EventoCreate(CamposEvento):
         "nome_botao": None, "nome_dialog": "convidar_gestor", "dialog_clicado": "convidar",
         "nome_showcase": None, "showcase_click": None
     }]})
+
+    @field_validator("cliente_ip", mode="before")
+    @classmethod
+    def validar_ip(cls, value):
+        if value is None:
+            return None
+        if not isinstance(value, str) or "%" in value:
+            raise ValueError("Informe um endereço IPv4 ou IPv6 sem zona de interface")
+        return value.strip()
 
     @model_validator(mode="after")
     def validar_campos_do_evento(self):

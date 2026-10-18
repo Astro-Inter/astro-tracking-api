@@ -32,7 +32,7 @@ def banco(monkeypatch):
 
     async def salvar(query, *values):
         columns = ("firebase_uid", "tipo_evento", "nome_botao", "nome_tela", "contexto_tela",
-                   "nome_dialog", "dialog_clicado", "showcase_click", "nome_showcase")
+                   "nome_dialog", "dialog_clicado", "showcase_click", "nome_showcase", "cliente_ip")
         return dict(zip(columns, values), id_evento=1, criado_em=datetime(2026, 10, 2, 12))
 
     db.fetchrow.side_effect = salvar

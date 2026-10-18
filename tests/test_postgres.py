@@ -25,6 +25,7 @@ def test_tabela_exata_sem_pk_ou_default_timestamp(monkeypatch):
             await db.execute(f"""CREATE TABLE "{schema}".eventos_astro (
                 id_evento BIGSERIAL,
                 firebase_uid VARCHAR,
+                cliente_ip INET,
                 tipo_evento VARCHAR,
                 nome_botao VARCHAR,
                 nome_tela VARCHAR,

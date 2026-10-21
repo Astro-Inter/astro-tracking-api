@@ -14,5 +14,16 @@
       "id": "2004ed1dbe4a460495e663c42f3b801f"
     }
   ],
-  "observability": { "enabled": true }
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": false,
+      "head_sampling_rate": 1,
+      "persist": false,
+      "destinations": [
+        "astro-grafana-logs"
+      ]
+    }
+  }
 }

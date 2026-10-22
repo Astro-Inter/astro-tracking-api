@@ -8,7 +8,7 @@ Não há consultas públicas dos eventos. O Swagger está em `/docs`.
 
 ## Banco e contrato
 
-Usa a tabela `eventos_astro` existente, com as doze colunas do DDL, incluindo `cliente_ip INET` opcional.
+Usa a tabela `evento_astro` existente, com as doze colunas do DDL, incluindo `cliente_ip INET` opcional.
 Não cria nem altera tabelas automaticamente. O `BIGSERIAL` gera `id_evento`;
 o INSERT preenche `criado_em` com `CURRENT_TIMESTAMP AT TIME ZONE 'UTC'`,
 porque a tabela não possui DEFAULT para esse campo. A resposta representa esse horário com `Z`.
@@ -78,7 +78,7 @@ Se houver um GTM server-side/proxy intermediário, o IP observado pode ser o do
 proxy; esse fluxo precisa de uma política própria de encaminhamento confiável.
 
 O IP não é acrescentado aos logs da aplicação/Grafana. A coleta/gravação fica na
-tabela eventos_astro, consumida posteriormente pela API medalhão/Databricks.
+tabela evento_astro, consumida posteriormente pela API medalhão/Databricks.
 
 Referências: [PR do banco](https://github.com/Astro-Inter/banco-de-dados/pull/39),
 [headers Cloudflare](https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-connecting-ip).

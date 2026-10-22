@@ -22,7 +22,7 @@ def test_tabela_exata_sem_pk_ou_default_timestamp(monkeypatch):
         db = await original_connect(url)
         try:
             await db.execute(f'CREATE SCHEMA "{schema}"')
-            await db.execute(f"""CREATE TABLE "{schema}".eventos_astro (
+            await db.execute(f"""CREATE TABLE "{schema}".evento_astro (
                 id_evento BIGSERIAL,
                 firebase_uid VARCHAR,
                 cliente_ip INET,
@@ -65,7 +65,7 @@ def test_tabela_exata_sem_pk_ou_default_timestamp(monkeypatch):
         async def check_saved():
             db = await test_connection()
             try:
-                rows = await db.fetch("SELECT * FROM eventos_astro ORDER BY id_evento")
+                rows = await db.fetch("SELECT * FROM evento_astro ORDER BY id_evento")
                 assert len(rows) == 2
                 assert rows[1]["firebase_uid"] == "uid-teste"
                 assert rows[0]["criado_em"] is not None

@@ -1,16 +1,17 @@
-"""Verifica a aplicação ASGI com bindings simulados; não executa workerd."""
+"""Verifica a aplicaÃ§Ã£o ASGI com bindings simulados; nÃ£o executa workerd."""
 
 import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 from fastapi.testclient import TestClient
 
 
 def test_worker_cors_bindings_e_lifespan(monkeypatch):
-    # O SDK depende de JS/Pyodide, indisponível no CPython usado pelos testes.
+    # O SDK depende de JS/Pyodide, indisponÃ­vel no CPython usado pelos testes.
     import sys
-    sdk = SimpleNamespace(asgi=SimpleNamespace(entrypoint=lambda application: application))
+    sdk = SimpleNamespace(asgi=SimpleNamespace(entrypoint=lambda application: application), fetch=AsyncMock())
     monkeypatch.setitem(sys.modules, "workers", sdk)
     spec = importlib.util.spec_from_file_location("worker_test", Path(__file__).resolve().parents[1] / "src" / "worker.py")
     worker = importlib.util.module_from_spec(spec)
@@ -23,7 +24,7 @@ def test_worker_cors_bindings_e_lifespan(monkeypatch):
             scope = dict(scope, env=env)
         await worker.application(scope, receive, send)
 
-    # TestClient também executa lifespan sem env, como o adaptador oficial.
+    # TestClient tambÃ©m executa lifespan sem env, como o adaptador oficial.
     with TestClient(with_bindings) as client:
         assert client.get("/health").status_code == 200
         headers = {"Origin": env.CORS_ALLOWED_ORIGINS, "Access-Control-Request-Method": "POST"}

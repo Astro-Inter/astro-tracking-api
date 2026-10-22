@@ -106,7 +106,7 @@ def test_nul_rejeitado_antes_do_postgres(client, banco, field):
 
 
 def test_sql_parametrizado_e_horario_sem_default(client, banco):
-    malicious = "'); DROP TABLE eventos_astro; --"
+    malicious = "'); DROP TABLE evento_astro; --"
     response = client.post("/api/eventos", json={"tipo_evento": "screen_view", "nome_tela": malicious})
     assert response.status_code == 201
     query, *values = banco[0].fetchrow.call_args.args

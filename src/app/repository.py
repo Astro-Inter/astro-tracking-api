@@ -4,7 +4,7 @@ from .schemas import EventoCreate
 
 
 INSERT_EVENTO = """
-    INSERT INTO eventos_astro (
+    INSERT INTO evento_astro (
         firebase_uid, tipo_evento, nome_botao, nome_tela, contexto_tela,
         nome_dialog, dialog_clicado, showcase_click, nome_showcase, cliente_ip, criado_em
     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::inet, CURRENT_TIMESTAMP AT TIME ZONE 'UTC')

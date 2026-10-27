@@ -1,3 +1,4 @@
+from .diagnostics import diagnostic, emit
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -22,7 +23,11 @@ async def get_db(request: Request) -> AsyncIterator[asyncpg.Connection]:
             password=config.db_password.get_secret_value(), database=config.db_name,
             ssl=config.db_ssl,
         )
-    db = await asyncpg.connect(**options, timeout=5, command_timeout=10, statement_cache_size=0)
+    try:
+        db = await asyncpg.connect(**options, timeout=5, command_timeout=10, statement_cache_size=0)
+    except Exception as error:
+        emit("dependency_failed", level="ERROR", stage="connect", dependency="postgresql", timeout_ms=5000, **diagnostic(error))
+        raise
     try:
         yield db
     finally:

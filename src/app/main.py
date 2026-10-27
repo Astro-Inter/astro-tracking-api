@@ -1,3 +1,4 @@
+from .diagnostics import HttpObservability, diagnostic, emit
 import logging
 
 from asyncpg import PostgresError
@@ -18,6 +19,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title="Astro — API de Tracking", version="2.0.0",
         description="dataLayer → GTM → API → PostgreSQL. Horários em UTC.",
     )
+    app.add_middleware(HttpObservability, service="astro-tracking-api")
     app.state.config = config
     app.add_middleware(
         CORSMiddleware, allow_origins=config.cors_origins,
@@ -26,7 +28,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
 
     async def database_error(request: Request, exc: Exception):
-        logger.error("Falha de persistência: %s", type(exc).__name__)
+        emit("database_operation_failed", level="ERROR", dependency="postgresql", stage="persist_event", **diagnostic(exc))
         return JSONResponse(status_code=503, content={"detail": "Banco indisponível ou estrutura incompatível."})
 
     for error in (PostgresError, OSError, TimeoutError):

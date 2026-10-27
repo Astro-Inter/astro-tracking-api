@@ -59,6 +59,8 @@ async def _export_log(env, scope, status, reason=None):
             {"key": "http.request.method", "value": {"stringValue": str(scope.get("method", "UNKNOWN"))}},
             {"key": "http.response.status_code", "value": {"intValue": str(status)}},
         ]
+        for key, value in scope.get("astro_observation", {}).items():
+            attributes.append({"key": key, "value": {"stringValue": str(value)}})
         if reason:
             attributes.append({"key": "error.type", "value": {"stringValue": reason}})
         payload = {"resourceLogs": [{"resource": {"attributes": [{"key": "service.name", "value": {"stringValue": "astro-tracking-api"}}]}, "scopeLogs": [{"scope": {"name": "astro-cloudflare-logs", "version": "1"}, "logRecords": [{"timeUnixNano": str(__import__("time").time_ns()), "severityNumber": 17 if status >= 500 else 9, "severityText": "ERROR" if status >= 500 else "INFO", "body": {"stringValue": event}, "attributes": attributes}]}]}]}

@@ -216,3 +216,7 @@ $env:TEST_DATABASE_URL = 'postgresql://usuario:senha@localhost:5432/astro_test'
 Esse teste cria um schema temporário com exatamente o DDL informado, sem PK nem DEFAULT de
 `criado_em`, verifica os registros persistidos e remove somente esse schema ao terminar.
 Veja [VALIDACAO.md](VALIDACAO.md) para resultados e limites da revisão.
+
+## Diagnóstico operacional
+
+Consulte [os campos e limites dos novos diagnósticos](docs/observability-diagnostics.md) para investigar falhas por requisição ou execução no Grafana.

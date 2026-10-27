@@ -161,6 +161,8 @@ O Dockerfile é para execução convencional; o Worker usa `src/worker.py` e o a
 Não é um deploy de Uvicorn no Cloudflare Pages.
 
 1. Instale `uv` e use Node.js compatível com o Wrangler. As dependências do Worker estão no `pyproject.toml`.
+   `workers-py` e `workers-runtime-sdk` ficam somente no grupo `dev`: são ferramentas
+   de empacotamento e não devem entrar nas dependências da aplicação em WebAssembly.
    No Windows, execute o pywrangler em um clone/cópia com caminho simples, como
    `C:\dev\astro-tracking`: a versão validada falhou no caminho deste projeto por causa
    do `&` em `Instituto J&F`. O dry-run passou em uma pasta temporária sem esse caractere.
